@@ -19,7 +19,10 @@
     "module": "commonjs",
     "isolatedModules": true,
     "noEmitOnError": true,
-    "jsx": "react"
+    "jsx": "react",
+    "typeRoots": [
+      "./node_modules/@types"
+    ]
   },
   "exclude": [
     "./lib",
