@@ -6,7 +6,7 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "build": "npx rimraf ./*.js && npx rimraf ./*.d.ts && npx copyfiles -f ./src/**.d.ts ./ && npx tsc"
+    "build": "npx rimraf ./*.js && npx rimraf ./*.d.ts && node ./clean.mjs && npx copyfiles -f ./src/**.d.ts ./ && npx tsc"
   },
   "dependencies": {},
   "devDependencies": {
