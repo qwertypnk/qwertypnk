@@ -1,19 +1,15 @@
 {
-  "name": "qwertypnk",
-  "version": "1.0.6",
+  "name": "package-name",
+  "version": "0.9.1",
   "description": "",
-  "repository": "https://github.com/qwertypnk/qwertypnk",
+  "repository": "",
   "author": "",
   "license": "ISC",
-  "bin": {
-    "qwerty": "./bin/qwertypnk.js"
+  "scripts": {
+    "build": "npx rimraf ./*.js && npx rimraf ./*.d.ts && npx copyfiles -f ./src/**.d.ts ./ && npx tsc"
   },
-  "scripts": {},
-  "dependencies": {
-    "fs-extra": "^9.0.1"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@types/fs-extra": "^9.0.1",
     "@types/node": "^14.0.11",
     "@typescript-eslint/eslint-plugin": "^3.5.0",
     "@typescript-eslint/parser": "^3.5.0",

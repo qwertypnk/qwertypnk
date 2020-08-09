@@ -10,6 +10,7 @@ const modulePath = path.resolve(path.dirname(require.resolve('../package.json'))
 
 const packageTemplatePath = path.resolve(modulePath, 'templates', 'package');
 const defpackageTemplatePath = path.resolve(modulePath, 'templates', 'defpackage');
+const spackageTemplatePath = path.resolve(modulePath, 'templates', 'spackage');
 
 // const boilerplateTemplatePath = path.resolve(modulePath, 'templates', 'boilerplate');
 
@@ -28,7 +29,7 @@ const helpDisrupt = (options) => {
     return null;
   }
   for (let option of options) {
-    if (['-h', '--help'].indexOf(option.toLowerCase()) !== -1) {
+    if ([ '-h', '--help' ].indexOf(option.toLowerCase()) !== -1) {
       return helpDisplay;
     }
   }
@@ -50,7 +51,7 @@ if (!options.length) {
   process.exit(1);
 }
 
-switch (options[0].toLowerCase()) {
+switch (options[ 0 ].toLowerCase()) {
   case 'version':
   case 'v':
   case '-v':
@@ -83,14 +84,14 @@ switch (options[0].toLowerCase()) {
       return disrupt();
     }
 
-    exit(!options[1], 'Error: no package name option.');
+    exit(!options[ 1 ], 'Error: no package name option.');
     exit(options.length > 2, 'Error: unknown extra options.');
 
-    packageName = options[1];
+    packageName = options[ 1 ];
     packageFolderName = packageName;
     try {
       if (packageName.charAt(0) === '@' && packageName.search('/')) {
-        packageFolderName = packageName.split('/')[1];
+        packageFolderName = packageName.split('/')[ 1 ];
       }
     } catch (ex) {
       console.warn(ex);
@@ -117,14 +118,14 @@ switch (options[0].toLowerCase()) {
       return disrupt();
     }
 
-    exit(!options[1], 'Error: no package name option.');
+    exit(!options[ 1 ], 'Error: no package name option.');
     exit(options.length > 2, 'Error: unknown extra options.');
 
-    packageName = options[1];
+    packageName = options[ 1 ];
     packageFolderName = packageName;
     try {
       if (packageName.charAt(0) === '@' && packageName.search('/')) {
-        packageFolderName = packageName.split('/')[1];
+        packageFolderName = packageName.split('/')[ 1 ];
       }
     } catch (ex) {
       console.warn(ex);
@@ -137,6 +138,38 @@ switch (options[0].toLowerCase()) {
     );
 
     fs.copySync(defpackageTemplatePath, packagePath);
+    replaceInFile(path.resolve(packagePath, 'package.json'), {
+      'package-name': packageName,
+    });
+
+    break;
+
+  case 'spackage':
+    disrupt = helpDisrupt(options);
+    if (disrupt) {
+      return disrupt();
+    }
+
+    exit(!options[ 1 ], 'Error: no package name option.');
+    exit(options.length > 2, 'Error: unknown extra options.');
+
+    packageName = options[ 1 ];
+    packageFolderName = packageName;
+    try {
+      if (packageName.charAt(0) === '@' && packageName.search('/')) {
+        packageFolderName = packageName.split('/')[ 1 ];
+      }
+    } catch (ex) {
+      console.warn(ex);
+    }
+    packagePath = path.resolve(process.cwd(), packageFolderName);
+
+    exit(
+      fs.existsSync(path.resolve(process.cwd(), packageFolderName)),
+      'Error: a folder with the package name already exists.',
+    );
+
+    fs.copySync(spackageTemplatePath, packagePath);
     replaceInFile(path.resolve(packagePath, 'package.json'), {
       'package-name': packageName,
     });
@@ -232,7 +265,7 @@ switch (options[0].toLowerCase()) {
 
 async function replaceInFile(path, replacements) {
   let data = fs.readFileSync(path).toString();
-  for (let [key, value] of Object.entries(replacements)) {
+  for (let [ key, value ] of Object.entries(replacements)) {
     data = data.replace(key, value);
   }
   fs.writeFileSync(path, data);
